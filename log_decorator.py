@@ -1,6 +1,6 @@
 import string
-import inspect
 import datetime
+from functools import wraps
 
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".lower()
 CAPITALS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -20,13 +20,11 @@ def c_cypher(strr, key):
 
 def log(logfile):
     def accepter_outer(func_outer):
+        @wraps(func_outer)
         def output_changer_2():
-            called_functs = inspect.getouterframes(inspect.currentframe(), 3)
-            piece_of_code = called_functs[1][4][1] # :((
-            func_we_want = piece_of_code[6:len(piece_of_code) - 4] # :{{
             result = func_outer()
             f = open(logfile, 'a')
-            f.write("{0} was called at {1}\n".format(func_we_want, datetime.datetime.now()))
+            f.write("{0} was called at {1}\n".format(func_outer.__name__, datetime.datetime.now()))
             f.close()
             return result
         return output_changer_2
@@ -35,6 +33,7 @@ def log(logfile):
 
 def encrypt(key):
     def accepter(func):
+        @wraps(func)
         def output_changer():
             return c_cypher(func(), key)
         return output_changer
@@ -49,4 +48,3 @@ def get_low():
 print(get_low())
 
 # Igv igv igv nqy
-

@@ -1,5 +1,3 @@
-# import itertools
-
 def accepts(*args):
     def inner(funct):
         def check_errors(*fargs):
